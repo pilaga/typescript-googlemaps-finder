@@ -10,6 +10,7 @@ type GoogleGeocodingResponse = {
     status: 'OK' | 'ZERO_RESULTS';
 }
 
+
 function submitHandler(event: Event) {
     event.preventDefault();
 
@@ -22,8 +23,20 @@ function submitHandler(event: Event) {
     .then(response => {
         if(response.data.status != 'OK') {
             throw new Error('could not fetch location');
-        }        
+        } 
+        
+        console.log(response);
         const coords = response.data.results[0].geometry.location;
+
+        //create map
+        const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+            center: coords,
+            zoom: 11,
+          });
+
+        //create marker;
+        const marker = new google.maps.Marker({position: coords, map: map});
+
     }).catch(error => {
         console.log(error);
     })
